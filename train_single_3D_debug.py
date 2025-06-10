@@ -15,15 +15,16 @@ import torch.distributed as dist
 import matplotlib.pyplot as plt
 import random
 from typing import List, Tuple
-
+import torchio as tio
 from segment_anything_3d import sam_model_registry3D
 from segment_anything_3d.modeling import TwoWayTransformer, MaskDecoder3D, TwoWayTransformer3D
 
 from utils.dataloader import get_im_gt_name_dict, create_dataloaders, RandomHFlip, Resize, LargeScaleJitter
 from utils.loss_mask import loss_masks
+from utils.metric_utils import compute_metrics_drsam, print_computed_metrics
 import utils.misc as misc
-from termcolor import colored
-
+# from termcolor import colored
+import copy
 
 
 class LayerNorm2d(nn.Module):
@@ -411,11 +412,11 @@ def save_labels_and_predictions(masks_dr_binary, labels, epoch, output_dir="nii_
     os.makedirs(output_dir, exist_ok=True)
 
     # 保存真实标签
-    label_filename = os.path.join(output_dir, f"label_epoch_{epoch}.nii.gz")
+    label_filename = os.path.join(output_dir, f"label_sample_{epoch}.nii.gz")
     save_nii(labels, label_filename)
 
     # 保存预测结果
-    pred_filename = os.path.join(output_dir, f"pred_epoch_{epoch}.nii.gz")
+    pred_filename = os.path.join(output_dir, f"pred_sample_{epoch}.nii.gz")
     save_nii(masks_dr_binary, pred_filename)
 
 
@@ -428,7 +429,7 @@ from scipy.ndimage import binary_dilation, binary_erosion
 
 
 def compute_iou(preds: torch.Tensor, target: torch.Tensor) -> dict:
-    num_classes = 2
+    num_classes = 20
     class_iou = [0.0] * num_classes  # 初始化所有类别的 IoU 为 0
     class_count = [0] * num_classes
     iou_sum = 0.0
@@ -520,7 +521,7 @@ def compute_boundary_iou(preds, target, num_classes=1, kernel_size=3):
     return boundary_iou
 
 
-def compute_dice(preds, target, num_classes=2):
+def compute_dice(preds, target, num_classes=20):
     """
     计算 Dice 分数。
     输入: preds [B, 1, D, H, W], target [B, 1, D, H, W]，整数类型
@@ -551,18 +552,57 @@ def init_checkpoint(model, optimizer, lr_scheduler, ckp_path, device):
 
     if last_ckpt:
         model.load_state_dict(last_ckpt['model_state_dict'])
-        start_epoch = last_ckpt['epoch']
-        optimizer.load_state_dict(last_ckpt['optimizer_state_dict'])
-        lr_scheduler.load_state_dict(last_ckpt['lr_scheduler_state_dict'])
-        losses = last_ckpt['losses']
-        dices = last_ckpt['dices']
-        best_loss = last_ckpt['best_loss']
-        best_dice = last_ckpt['best_dice']
-        print(f"Loaded checkpoint from {ckp_path} (epoch {start_epoch})")
+        # start_epoch = last_ckpt['epoch']
+        # optimizer.load_state_dict(last_ckpt['optimizer_state_dict'])
+        # lr_scheduler.load_state_dict(last_ckpt['lr_scheduler_state_dict'])
+        # losses = last_ckpt['losses']
+        # dices = last_ckpt['dices']
+        # best_loss = last_ckpt['best_loss']
+        # best_dice = last_ckpt['best_dice']
+        print(f"Loaded checkpoint from {ckp_path} ")
     else:
         start_epoch = 0
         print(f"No checkpoint found at {ckp_path}, start training from scratch")
 
+def get_dicewithiou_score(prev_masks, gt3D):
+
+    def compute_dice(mask_pred, mask_gt):
+        mask_threshold = 0.5
+
+        mask_pred = (mask_pred > mask_threshold)
+        mask_gt = (mask_gt > 0)
+
+        volume_sum = mask_gt.sum() + mask_pred.sum()
+        if volume_sum == 0:
+            return np.NaN
+        volume_intersect = (mask_gt & mask_pred).sum()
+        return 2 * volume_intersect / volume_sum
+
+    def compute_iou(mask_pred, mask_gt):
+        mask_pred = (mask_pred > 0.5)
+        mask_gt = (mask_gt > 0)
+
+        intersection = (mask_gt & mask_pred).sum()
+        union = (mask_gt | mask_pred).sum()
+        if union == 0:
+            return np.NaN
+        return intersection / union
+
+    pred_masks = (prev_masks > 0.5)
+    true_masks = (gt3D > 0)
+    dice_list = []
+    for i in range(true_masks.shape[0]):
+        dice_list.append(compute_dice(pred_masks[i], true_masks[i]))
+    dice_score = sum(dice_list) / len(dice_list)
+
+    # Compute IoU score
+    iou_list = []
+    for i in range(true_masks.shape[0]):
+        iou_list.append(compute_iou(pred_masks[i], true_masks[i]))
+
+    iou_score = sum(iou_list) / len(iou_list)
+
+    return dice_score.item(), iou_score.item()
 
 # def save_checkpoint(self, epoch, state_dict, describe="last"):
 #     torch.save(
@@ -612,7 +652,7 @@ def main(net, sam, train_datasets, valid_datasets, args):
     if not args.eval:
         print("--- define optimizer ---")
         optimizer = optim.AdamW(net.parameters(), lr=args.learning_rate, betas=(0.9, 0.999), eps=1e-02,
-                                weight_decay=0.0001)
+                                weight_decay=0.1)
         lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer, args.lr_drop_epoch)
         lr_scheduler.last_epoch = args.start_epoch
 
@@ -693,6 +733,8 @@ def train(args, net, sam, optimizer, optimizer_sam, train_dataloaders, valid_dat
         print("epoch:   ", epoch, "  learning rate:  ", optimizer.param_groups[0]["lr"])
         metric_logger = misc.MetricLogger(delimiter="  ")
         num_sample = 0
+        epoch_dice = 0
+        epoch_iou = 0
         with tqdm(metric_logger.log_every(train_dataloaders, 100), total=len(train_dataloaders),
                   desc=f"Epoch {epoch}/{epoch_num - 1}") as pbar:
             for data in pbar:
@@ -700,7 +742,7 @@ def train(args, net, sam, optimizer, optimizer_sam, train_dataloaders, valid_dat
                 labels = labels.long()  # 转换为整数
                 inputs = inputs.to(device=args.device)
                 labels = labels.to(device=args.device)
-
+                # print("ori_unique shape:", labels.shape, "ori_unique values:", torch.unique(labels))
                 # 输入提示（3D）
                 input_keys = ['box', 'point', 'noise_mask']
                 labels_box = misc.masks_to_boxes(labels[:,0,:,:])
@@ -708,10 +750,11 @@ def train(args, net, sam, optimizer, optimizer_sam, train_dataloaders, valid_dat
                     labels_points = misc.masks_sample_points(labels[:, 0, :, :, :])  # 3D 点 [B, N, 3]
                 except:
                     input_keys = ['box', 'noise_mask']
-                labels_512 = F.interpolate(labels.float(), size=(12, 512, 512), mode='nearest').long()
+                labels_512 = F.interpolate(labels.float(), size=(128, 128, 128), mode='nearest').long()
                 labels_noisemask = misc.masks_noise(labels_512)  # [B, 1, D, H, W]
-
+                # print("labels_ori shape:", labels.shape, "unique values:", torch.unique(labels))
                 batched_input = []
+
                 for b_i in range(inputs.shape[0]):
                     dict_input = dict()
                     img = inputs[b_i]  # [C, D, H, W]，C=1
@@ -742,8 +785,6 @@ def train(args, net, sam, optimizer, optimizer_sam, train_dataloaders, valid_dat
                 sparse_embeddings = [batched_output[i_l]['sparse_embeddings'] for i_l in range(batch_len)]
                 dense_embeddings = [batched_output[i_l]['dense_embeddings'] for i_l in range(batch_len)]
 
-
-
                 masks_sam, masks_dr = net(
                     image_embeddings=encoder_embedding,
                     image_pe=image_pe,
@@ -755,10 +796,15 @@ def train(args, net, sam, optimizer, optimizer_sam, train_dataloaders, valid_dat
                 )
 
                 if masks_dr.shape[2:] != labels.shape[2:]:
-                    masks_dr = F.interpolate(masks_dr, size=labels.shape[2:], mode='trilinear',
-                                             align_corners=False)  # 形状: [1, 1, 12, 880, 880]
+                    masks_dr = F.interpolate(masks_dr, size=labels.shape[2:], mode='trilinear', align_corners=False)  # 形状: [1, 1, 12, 880, 880]
+                print("masks_dr unique:", torch.unique(masks_dr))
                 loss_mask, loss_dice = loss_masks(masks_dr, labels, len(masks_dr))
                 loss = loss_mask + loss_dice
+
+                dice, iou = get_dicewithiou_score(prev_masks=masks_dr, gt3D=labels)
+
+                epoch_dice +=dice
+                epoch_iou +=iou
 
                 optimizer.zero_grad()
                 optimizer_sam.zero_grad()
@@ -769,36 +815,19 @@ def train(args, net, sam, optimizer, optimizer_sam, train_dataloaders, valid_dat
                 # masks_softmax = torch.softmax(masks_sam, dim=1)
                 # preds = masks_softmax.argmax(dim=1, keepdim=True)
                 # print("Pred classes:", preds.unique().cpu().numpy())
-                if num_sample % 10 == 0:
-                    # print(colored(f"encoder_embedding mean: {encoder_embedding.mean().item()}", 'cyan', attrs=['bold']))
-                    # print(
-                    #     colored(f"sparse_embeddings[0] mean: {sparse_embeddings[0].mean().item()}", 'cyan', attrs=['bold']))
-                    # print(colored(f"dense_embeddings[0] mean: {dense_embeddings[0].mean().item()}", 'cyan', attrs=['bold']))
-                    masks_dr = (masks_dr - masks_dr.min()) / (masks_dr.max() - masks_dr.min() + 1e-6)  # 归一化到 [0, 1]
-                    masks_dr = masks_dr * 20 - 10  # 缩放到 [-10, 10]
-                    print("masks_dr shape:", masks_dr.shape, "unique values:", torch.unique(masks_dr))
-                    print("labels_ori shape:", labels.shape, "unique values:", torch.unique(labels))
+                if num_sample % 1 == 0:
 
-                    masks_dr = torch.sigmoid(masks_dr)  # 形状: [1, 1, 32, 32, 32]
-                    # 上采样到目标形状
-                    threshold = min(0.4, masks_dr.max().item() * 0.7)
-                    masks_dr = (masks_dr > threshold).float()
-                    # print("masks_dr shape:", masks_dr.shape)
                     print("masks_dr unique:", torch.unique(masks_dr))
+
                     if labels.shape[1] > 1:
                         labels = torch.argmax(labels, dim=1, keepdim=True).float()  # 如果 labels 是 one-hot
                     else:
                         labels = labels.float()  # 保持单通道
                     # print("labels_ori shape:", labels.shape)
-                    print("labels_ori unique:", torch.unique(labels))
+                    # print("labels_ori unique:", torch.unique(labels))
 
-                    iou = compute_iou(masks_dr, labels)
-                    # boundary_iou = compute_boundary_iou(masks_dr, labels)
-                    dice = compute_dice(masks_dr, labels)
-
-                    print(f"\nTrain IoU: {[round(x, 4) for x in iou['class_iou']]}")
-                    # print(f"Train Boundary IoU: {boundary_iou}")
-                    print(f"Train Dice: {dice}")
+                    print_dice, print_iou = get_dicewithiou_score(prev_masks=masks_dr, gt3D=labels)
+                    print(f'print_dice: {print_dice},   print_iou: {print_iou}')
 
             metric_logger.update(training_loss=loss.item(), loss_mask=loss_mask.item(), loss_dice=loss_dice.item())
 
@@ -810,8 +839,7 @@ def train(args, net, sam, optimizer, optimizer_sam, train_dataloaders, valid_dat
         lr_scheduler.step()
         # 在训练循环中，优化器更新后
         optimizer.step()
-        print(colored(f"Net parameter norm: {sum(p.norm().item() for p in net.parameters())}", 'green',
-                      attrs=['bold']))
+        print(f"Net parameter norm: {sum(p.norm().item() for p in net.parameters())}")
 
         test_stats = evaluate(args, net, sam, valid_dataloaders)
         train_stats.update(test_stats)
@@ -864,8 +892,30 @@ def evaluate(args, net, sam, valid_dataloaders, visualize=False):
             inputs = inputs_val.to(device=args.device)
             labels = labels_ori.to(device=args.device)
 
-            # 输入形状：[B, C, D, H, W]，C=1（单通道体视显微镜图像）
-            # 标签形状：[B, 1, D, H, W]
+            # 这是一个尝试将MED3d的评价指标计算过程迁移到DRmed上时，发现的问题，该评价指标为单标签验证方式，结合标签信息验证模型。
+            # 模型输入为image和mask的nii.path信息。
+
+            # unique_label = np.unique(labels)
+            # exist_categories = [int(l) for l in unique_label if l != 0]
+            # meta_info = labels.shape[2:]
+            #
+            # # 将 inputs_val 和 labels_ori 转换为 TorchIO 的 ScalarImage 和 LabelMap
+            # image = tio.ScalarImage(tensor=inputs_val)  # 假设 inputs_val 是图像数据
+            # label = tio.LabelMap(tensor=labels_ori)  # 假设 labels_ori 是标签数据
+            #
+            # # 创建一个 Subject 对象
+            # subject = tio.Subject(image=image, label=label)
+            #
+            # for category_index in exist_categories:
+            #     category_specific_subject = copy.deepcopy(subject)
+            #     category_specific_meta_info = copy.deepcopy(meta_info)
+            #
+            #     roi_image, roi_label, meta_info = data_preprocess(category_specific_subject,
+            #                                                       category_specific_meta_info,
+            #                                                       category_index=category_index,
+            #                                                       target_spacing=target_spacing,
+            #                                                       crop_size=crop_size)
+
 
             # 输入提示（3D）
             input_keys = ['box', 'point', 'noise_mask']
@@ -874,7 +924,7 @@ def evaluate(args, net, sam, valid_dataloaders, visualize=False):
                 labels_points = misc.masks_sample_points(labels[:, 0, :, :, :])  # 3D 点 [B, N, 3]
             except:
                 input_keys = ['box', 'noise_mask']
-            labels_512 = F.interpolate(labels.float(), size=(12, 512, 512), mode='nearest').long()
+            labels_512 = F.interpolate(labels.float(), size=(128, 128, 128), mode='nearest').long()
             labels_noisemask = misc.masks_noise(labels_512)  # [B, 1, D, H, W]
 
             batched_input = []
@@ -914,58 +964,29 @@ def evaluate(args, net, sam, valid_dataloaders, visualize=False):
             sparse_embeddings = [batched_output[i_l]['sparse_embeddings'] for i_l in range(batch_len)]
             dense_embeddings = [batched_output[i_l]['dense_embeddings'] for i_l in range(batch_len)]
 
-
-
-            masks_sam, masks_dr = net(
-                image_embeddings=encoder_embedding,
-                image_pe=image_pe,
-                sparse_prompt_embeddings=sparse_embeddings,
-                dense_prompt_embeddings=dense_embeddings,
-                multimask_output=False,
-                med_token_only=False,
-                hierarchical_embeddings=hierarchical_embeddings,
-            )
-
-
-            masks_dr = (masks_dr - masks_dr.min()) / (masks_dr.max() - masks_dr.min() + 1e-6)  # 归一化到 [0, 1]
-            masks_dr = masks_dr * 20 - 10  # 缩放到 [-10, 10]
-            print("masks_dr shape:", masks_dr.shape, "unique values:", torch.unique(masks_dr))
-            print("labels_ori shape:", labels.shape, "unique values:", torch.unique(labels))
+            masks_sam, masks_dr = net(image_embeddings=encoder_embedding, image_pe=image_pe, sparse_prompt_embeddings=sparse_embeddings,
+                dense_prompt_embeddings=dense_embeddings, multimask_output=False, med_token_only=False, hierarchical_embeddings=hierarchical_embeddings,)
 
             masks_dr = torch.sigmoid(masks_dr)  # 形状: [1, 1, 32, 32, 32]
             print("masks_dr shape:", masks_dr.shape, "unique sigmoid values:", torch.unique(masks_dr))
+
             # 上采样到目标形状
             if masks_dr.shape[2:] != labels.shape[2:]:
                 masks_dr = F.interpolate(masks_dr, size=labels.shape[2:], mode='trilinear',
                                          align_corners=False)  # 形状: [1, 1, 12, 880, 880]
-            threshold = min(0.4, masks_dr.max().item() * 0.7)
-            masks_dr = (masks_dr > threshold).float()
 
             print("masks_dr unique:", torch.unique(masks_dr))
-            if labels.shape[1] > 1:
-                labels = torch.argmax(labels, dim=1, keepdim=True).float()  # 如果 labels 是 one-hot
-            else:
-                labels = labels.float()  # 保持单通道
-            print("labels_ori unique:", torch.unique(labels))
 
-            iou = compute_iou(masks_dr, labels)
-            # boundary_iou = compute_boundary_iou(masks_dr, labels)
-            dice = compute_dice(masks_dr, labels)
+            print_dice, print_iou = get_dicewithiou_score(prev_masks=masks_dr, gt3D=labels)
+            print(f'print_dice: {print_dice},  print_iou: {print_iou}')
 
-            print(f"\nVal IoU: {[round(x, 4) for x in iou['class_iou']]}")
-            # print(f"Train Boundary IoU: {boundary_iou}")
-            print(f"Val Dice: {dice}")
 
-            loss_dict = {
-                f"val_iou_{k}": sum(iou['class_iou']) / len(iou['class_iou']) if iou['class_iou'] else 0.0,
-                # f"val_boundary_iou_{k}": boundary_iou.mean().item(),
-                f"val_dice_{k}": dice.mean().item()
-            }
-            metric_logger.update(**loss_dict)
 
-            i += 1
-            # 保存 NII 文件（仅保存第一个 batch 以节省空间）
-            save_labels_and_predictions(masks_dr, labels, i)
+            if args.visualize:
+
+                i += 1
+                # 保存 NII 文件（仅保存第一个 batch 以节省空间）
+                save_labels_and_predictions(masks_dr, labels, i)
 
         print('============================')
         metric_logger.synchronize_between_processes()
@@ -983,20 +1004,20 @@ def get_args_parser():
                         help="Path to the directory where masks and checkpoints will be output")
     parser.add_argument("--model-type", type=str, default="vit_b",
                         help="The type of model to load, in ['vit_h', 'vit_l', 'vit_b']")
-    parser.add_argument("--checkpoint", type=str, default='checkpoint/sam_med3d.pth',#'work_dirs/DrSAM_b/sam/epoch_130.pth'
+    parser.add_argument("--checkpoint", type=str, default='checkpoint/sam_med3d_turbo.pth',#'work_dirs/DrSAM_b/sam/epoch_130.pth'
                         help="The path to the SAM checkpoint to use for mask generation.")
-    parser.add_argument("--device", type=str, default="cuda",
+    parser.add_argument("--device", type=str, default="cpu",
                         help="The device to run generation on.")
 
     parser.add_argument('--seed', default=0, type=int)
-    parser.add_argument('--learning_rate', default=1e-3, type=float)
+    parser.add_argument('--learning_rate', default=1e-6, type=float)
     parser.add_argument('--start_epoch', default=0, type=int)
-    parser.add_argument('--lr_drop_epoch', default=3, type=int)
-    parser.add_argument('--max_epoch_num', default=1, type=int)
+    parser.add_argument('--lr_drop_epoch', default=2, type=int)
+    parser.add_argument('--max_epoch_num', default=5, type=int)
     parser.add_argument('--input_size', default=[12, 880, 880], type=list)
     parser.add_argument('--batch_size_train', default=1, type=int)
     parser.add_argument('--batch_size_valid', default=1, type=int)
-    parser.add_argument('--model_save_fre', default=1, type=int)
+    parser.add_argument('--model_save_fre', default=10, type=int)
 
     parser.add_argument('--world_size', default=1, type=int,
                         help='number of distributed processes')
@@ -1006,7 +1027,7 @@ def get_args_parser():
     parser.add_argument('--local_rank', type=int, help='local rank for dist')
     parser.add_argument('--find_unused_params', action='store_true')
     # if you want to eval or visulize
-    parser.add_argument('--eval', default=True)
+    parser.add_argument('--eval', default=False)
     parser.add_argument('--visualize', default=False)
     parser.add_argument("--restore-model", type=str, default= 'work_dirs/DrSAM_b/net/epoch_50.pth',#'work_dirs/DrSAM_b/net/epoch_0.pth'
                         help="The path to the hq_decoder training checkpoint for evaluation")
@@ -1023,8 +1044,8 @@ if __name__ == "__main__":
                    "gt_ext": ".nii.gz"}
 
     lumbar_spine_MRi = {"name": "lumbar_spine_MRi",
-                   "im_dir": "./data/lumbar_spine/train/img",
-                   "gt_dir": "./data/lumbar_spine/train/msk",
+                   "im_dir": r"D:\Desktop\3D_segmentation\3D-DRSAM\3DDrsam_data\train\imagesTr",
+                   "gt_dir": r"D:\Desktop\3D_segmentation\3D-DRSAM\3DDrsam_data\train\labelsTr",
                    "im_ext": ".nii.gz",
                    "gt_ext": ".nii.gz"}
 
@@ -1032,8 +1053,8 @@ if __name__ == "__main__":
 
     # valid set
     lumbar_spine_MRi_val = {"name": "lumbar_spine_MRi_val",
-                       "im_dir": "./data/lumbar_spine/val/img",
-                       "gt_dir": "./data/lumbar_spine/val/msk",
+                       "im_dir": r"D:\Desktop\3D_segmentation\3D-DRSAM\3DDrsam_data\val\img",
+                       "gt_dir": r"D:\Desktop\3D_segmentation\3D-DRSAM\3DDrsam_data\val\msk",
                        "im_ext": ".nii.gz",
                        "gt_ext": ".nii.gz"}
     # valid set

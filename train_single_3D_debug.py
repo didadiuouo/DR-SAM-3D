@@ -797,7 +797,7 @@ def train(args, net, sam, optimizer, optimizer_sam, train_dataloaders, valid_dat
 
                 if masks_dr.shape[2:] != labels.shape[2:]:
                     masks_dr = F.interpolate(masks_dr, size=labels.shape[2:], mode='trilinear', align_corners=False)  # 形状: [1, 1, 12, 880, 880]
-                print("masks_dr unique:", torch.unique(masks_dr))
+                # print("masks_dr unique:", torch.unique(masks_dr))
                 loss_mask, loss_dice = loss_masks(masks_dr, labels, len(masks_dr))
                 loss = loss_mask + loss_dice
 
@@ -817,7 +817,7 @@ def train(args, net, sam, optimizer, optimizer_sam, train_dataloaders, valid_dat
                 # print("Pred classes:", preds.unique().cpu().numpy())
                 if num_sample % 1 == 0:
 
-                    print("masks_dr unique:", torch.unique(masks_dr))
+                    # print("masks_dr unique:", torch.unique(masks_dr))
 
                     if labels.shape[1] > 1:
                         labels = torch.argmax(labels, dim=1, keepdim=True).float()  # 如果 labels 是 one-hot
@@ -975,13 +975,10 @@ def evaluate(args, net, sam, valid_dataloaders, visualize=False):
                 masks_dr = F.interpolate(masks_dr, size=labels.shape[2:], mode='trilinear',
                                          align_corners=False)  # 形状: [1, 1, 12, 880, 880]
 
-            print("masks_dr unique:", torch.unique(masks_dr))
+            # print("masks_dr unique:", torch.unique(masks_dr))
 
             print_dice, print_iou = get_dicewithiou_score(prev_masks=masks_dr, gt3D=labels)
             print(f'print_dice: {print_dice},  print_iou: {print_iou}')
-
-
-
             if args.visualize:
 
                 i += 1
@@ -1012,8 +1009,8 @@ def get_args_parser():
     parser.add_argument('--seed', default=0, type=int)
     parser.add_argument('--learning_rate', default=1e-6, type=float)
     parser.add_argument('--start_epoch', default=0, type=int)
-    parser.add_argument('--lr_drop_epoch', default=2, type=int)
-    parser.add_argument('--max_epoch_num', default=5, type=int)
+    parser.add_argument('--lr_drop_epoch', default=20, type=int)
+    parser.add_argument('--max_epoch_num', default=500, type=int)
     parser.add_argument('--input_size', default=[12, 880, 880], type=list)
     parser.add_argument('--batch_size_train', default=1, type=int)
     parser.add_argument('--batch_size_valid', default=1, type=int)

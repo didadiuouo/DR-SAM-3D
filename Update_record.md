@@ -9,7 +9,7 @@
 
     MedSAM3D 训练结果更新在train_result文件夹内excel表中（medsam3d结果.xlsx）
 
-2025-6-11
+2025-6-12
 
     DRsam3D和MedSAM3D训练过程结果更新在excel表内，出现过拟合的问题，不过训练与验证DICE达到0.54,IOU达到了0.37,仍需继续参数调整。
 

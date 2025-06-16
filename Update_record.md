@@ -19,5 +19,5 @@
     学习率越小，过拟合越慢
     1e-6，20次左右过拟合
 
-2025-6-16 分epoch验证过拟合情况，总结在“medsam3d结果.xlsx”里。最终调试的最高推论结果0.1888。![image](https://github.com/user-attachments/assets/7ec6b86e-cf6e-4d26-b8f5-265f71554e40)
-![image](https://github.com/user-attachments/assets/7045d6da-d198-4da8-89ff-d401783ad086)
+2025-6-16 分epoch验证过拟合情况，总结在“medsam3d结果.xlsx”里。最终调试的最高推论结果0.1888。<img src="https://github.com/user-attachments/assets/7ec6b86e-cf6e-4d26-b8f5-265f71554e40" width="210px">
+<img src="https://github.com/user-attachments/assets/7045d6da-d198-4da8-89ff-d401783ad086" width="210px">

@@ -24,3 +24,13 @@
 分epoch验证过拟合情况，总结在“medsam3d结果.xlsx”里。最终调试的最高推论结果0.1888。
 
 <img src="https://github.com/user-attachments/assets/7ec6b86e-cf6e-4d26-b8f5-265f71554e40" width="150px"> <img src="https://github.com/user-attachments/assets/7045d6da-d198-4da8-89ff-d401783ad086" width="410px">
+
+2025-6-17
+
+对比算法 3DSAM-adapter
+第一次训练，训练验证和测试结果如下，测试结果反而最高，程序待细查。
+Train metrics: 0.27631396
+Val metrics: 0.35554218
+Val metrics best: 0.3232891
+Case7.nii.gz - Dice 0.653682 | NSD 0.675991
+Case5.nii.gz - Dice 0.639147 | NSD 0.675235

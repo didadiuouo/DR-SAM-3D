@@ -34,3 +34,8 @@ Val metrics: 0.35554218
 Val metrics best: 0.3232891
 Case7.nii.gz - Dice 0.653682 | NSD 0.675991
 Case5.nii.gz - Dice 0.639147 | NSD 0.675235
+
+2025-6-18
+
+对比算法微调测试 MedLSAM，Memorizing SAM，FastSAM3D
+现有SAM算法多是基于单标签分割，其二分类的问题和我们的多标签分割的有些许差异，拿到程序后，需要修改标签读取方式以及评价指标计算方式。稳步进行。。。

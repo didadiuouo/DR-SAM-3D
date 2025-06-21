@@ -5,6 +5,9 @@ FastSAM3D 跑通，
 MemorizingSAM3D跑通，出了结果--类似MedSAM3D的过拟合,展示在结果excel里。
 
 
+2025-6-21
+
+验证了FastSAM3D，Medical-SAM-Adapter的结果，记录在结果xlsl里。
 
 
 

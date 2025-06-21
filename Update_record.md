@@ -1,4 +1,14 @@
 # Update record
+2025-6-20
+
+FastSAM3D 跑通，
+MemorizingSAM3D跑通，出了结果--类似MedSAM3D的过拟合,展示在结果excel里。
+
+
+
+
+
+
 2025-6-10
 
     DR-SAM3D 新增程序：多标签DICE指标迁移完成，验证单张图片，验证数据集多张图片。 

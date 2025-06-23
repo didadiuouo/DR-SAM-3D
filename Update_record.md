@@ -1,7 +1,7 @@
 # Update record
 2025-6-20
 
-FastSAM3D 跑通，
+    FastSAM3D 跑通，
     MemorizingSAM3D跑通，出了结果--类似MedSAM3D的过拟合,展示在结果excel里。
 
 
@@ -11,6 +11,7 @@ FastSAM3D 跑通，
 
 
 2025-6-23
+
     修改MedLSAM_SPL_Inference的读取数据和推论过程。MedLSAM是对比算法中唯一一个多标签分类的网络，其按标签将数据归为若干组，进行每个标签组的结果预测。我们的数据特点是部分标签不存在，
     导致MedLSAM无法完美运行，修改思路：遍历所有数据标签分布情况，生成标签对应map，利用medSAM读取标签map中信息进行标签组结果预测。
 

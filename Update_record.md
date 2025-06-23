@@ -2,12 +2,18 @@
 2025-6-20
 
 FastSAM3D 跑通，
-MemorizingSAM3D跑通，出了结果--类似MedSAM3D的过拟合,展示在结果excel里。
+    MemorizingSAM3D跑通，出了结果--类似MedSAM3D的过拟合,展示在结果excel里。
 
 
 2025-6-21
 
-验证了FastSAM3D，Medical-SAM-Adapter的结果，记录在结果xlsl里。
+    验证了FastSAM3D，Medical-SAM-Adapter的结果，记录在结果xlsl里。
+
+
+2025-6-23
+    修改MedLSAM_SPL_Inference的读取数据和推论过程。MedLSAM是对比算法中唯一一个多标签分类的网络，其按标签将数据归为若干组，进行每个标签组的结果预测。我们的数据特点是部分标签不存在，
+    导致MedLSAM无法完美运行，修改思路：遍历所有数据标签分布情况，生成标签对应map，利用medSAM读取标签map中信息进行标签组结果预测。
+
 
 
 
@@ -34,27 +40,27 @@ MemorizingSAM3D跑通，出了结果--类似MedSAM3D的过拟合,展示在结果
 
 2025-6-16 
 
-分epoch验证过拟合情况，总结在“medsam3d结果.xlsx”里。最终调试的最高推论结果0.1888。
-
-<img src="https://github.com/user-attachments/assets/7ec6b86e-cf6e-4d26-b8f5-265f71554e40" width="150px"> <img src="https://github.com/user-attachments/assets/7045d6da-d198-4da8-89ff-d401783ad086" width="410px">
+    分epoch验证过拟合情况，总结在“medsam3d结果.xlsx”里。最终调试的最高推论结果0.1888。
+    
+    <img src="https://github.com/user-attachments/assets/7ec6b86e-cf6e-4d26-b8f5-265f71554e40" width="150px"> <img src="https://github.com/user-attachments/assets/7045d6da-d198-4da8-89ff-d401783ad086" width="410px">
 
 2025-6-17
 
-对比算法 3DSAM-adapter
-第一次训练，训练验证和测试结果如下，测试结果反而最高，程序待细查。
-Train metrics: 0.27631396
-Val metrics: 0.35554218
-Val metrics best: 0.3232891
-Case7.nii.gz - Dice 0.653682 | NSD 0.675991
-Case5.nii.gz - Dice 0.639147 | NSD 0.675235
+    对比算法 3DSAM-adapter
+    第一次训练，训练验证和测试结果如下，测试结果反而最高，程序待细查。
+    Train metrics: 0.27631396
+    Val metrics: 0.35554218
+    Val metrics best: 0.3232891
+    Case7.nii.gz - Dice 0.653682 | NSD 0.675991
+    Case5.nii.gz - Dice 0.639147 | NSD 0.675235
 
 2025-6-18
 
-对比算法微调测试 MedLSAM，Memorizing SAM，FastSAM3D
-现有SAM算法多是基于单标签分割，其二分类的问题和我们的多标签分割的有些许差异，拿到程序后，需要修改标签读取方式以及评价指标计算方式。稳步进行。。。
+    对比算法微调测试 MedLSAM，Memorizing SAM，FastSAM3D
+    现有SAM算法多是基于单标签分割，其二分类的问题和我们的多标签分割的有些许差异，拿到程序后，需要修改标签读取方式以及评价指标计算方式。稳步进行。。。
 
 2025-6-19
 
-MedLSAM权重训练完成，MedLAM权重训练完成。{'valid_loss': 34.28057, 'train_loss': 25.599924}，等待推论验证。Memorizing SAM训练进行中。
+    MedLSAM权重训练完成，MedLAM权重训练完成。{'valid_loss': 34.28057, 'train_loss': 25.599924}，等待推论验证。Memorizing SAM训练进行中。
 
 

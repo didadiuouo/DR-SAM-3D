@@ -953,8 +953,8 @@ if __name__ == "__main__":
                    "gt_ext": ".nii.gz"}
 
     lumbar_spine_MRi = {"name": "lumbar_spine_MRi",
-                   "im_dir": "./data/lumbar_spine/train/img",
-                   "gt_dir": "./data/lumbar_spine/train/msk",
+                   "im_dir": r"/Data/VesselFM/dataset/imagesTr_min",
+                   "gt_dir": r"/Data/VesselFM/dataset/labelsTr_min",
                    "im_ext": ".nii.gz",
                    "gt_ext": ".nii.gz"}
 
@@ -962,8 +962,8 @@ if __name__ == "__main__":
 
     # valid set
     lumbar_spine_MRi_val = {"name": "lumbar_spine_MRi_val",
-                       "im_dir": "./data/lumbar_spine/val/img",
-                       "gt_dir": "./data/lumbar_spine/val/msk",
+                       "im_dir": r"/Data/VesselFM/dataset/imagesTr_min_val",
+                       "gt_dir": r"/Data/VesselFM/dataset/labelsTr_min_val",
                        "im_ext": ".nii.gz",
                        "gt_ext": ".nii.gz"}
     # valid set

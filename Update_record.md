@@ -18,7 +18,7 @@
 2025-6-25
 
     3D-unet探索分割多标签的方法，修改MedSAM3d，训练MedSAM3d
-    ![image](https://github.com/user-attachments/assets/6e524e34-e759-4805-80f1-952bbe4753ec)
+![image](https://github.com/user-attachments/assets/6e524e34-e759-4805-80f1-952bbe4753ec)
 
 
 

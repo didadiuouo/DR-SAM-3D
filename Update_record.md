@@ -15,6 +15,10 @@
     修改MedLSAM_SPL_Inference的读取数据和推论过程。MedLSAM是对比算法中唯一一个多标签分类的网络，其按标签将数据归为若干组，进行每个标签组的结果预测。我们的数据特点是部分标签不存在，
     导致MedLSAM无法完美运行，修改思路：遍历所有数据标签分布情况，生成标签对应map，利用medSAM读取标签map中信息进行标签组结果预测。
 
+2025-6-25
+
+    3D-unet探索分割多标签的方法，修改MedSAM3d，训练MedSAM3d
+![image](https://github.com/user-attachments/assets/6e524e34-e759-4805-80f1-952bbe4753ec)
 
 
 

@@ -1,4 +1,28 @@
 # Update record
+2025-07-01
+
+    最新结果更新
+![image](https://github.com/user-attachments/assets/8a269f21-e330-4b8b-bd3b-4a833040aa36)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 2025-6-20
 
     FastSAM3D 跑通，

@@ -1,30 +1,14 @@
 # Update record
 2025-08-04
 DRSAM3D结果更新
-| Class  | Average Dice |  Average IoU |
-| :---         |     :---:      |          ---: |
-|Class 0|	0.9802|	0.9612|
-|Class 1|	0.6822|	0.5272|
-|Class 2|	0.7217|	0.5745|
-|Class 3|	0.7225|	0.5736|
-|Class 4|	0.7125|	0.5646|
-|Class 5|	0.6786|	0.532|
-|Class 6|	0.5857|	0.4492|
-|Class 7|	0.5289|	0.4114|
-|Class 8|	0.5052|	0.3718|
-|Class 9|	0.3402|	0.2081|
-|Class 10|	0.7168|	0.5586|
-|Class 11|	0.6224|	0.4758|
-|Class 12|	0.6899|	0.5517|
-|Class 13|	0.7230|	0.5881|
-|Class 14|	0.6830|	0.5424|
-|Class 15|	0.6240|	0.4844|
-|Class 16|	0.4903|	0.3679|
-|Class 17|	0.4631|	0.3481|
-|Class 18|	0.2759|	0.1607|
-|Class 19|	0.5495|	0.3788|
-|All|	0.61478|	0.481505|
+
+<img width="396" height="400" alt="image" src="https://github.com/user-attachments/assets/3f7ce4d0-04d4-4a08-9ce6-129e722ab198" />
+
 <img width="351" height="175" alt="image" src="https://github.com/user-attachments/assets/b532dce9-702f-44b5-bddf-8f93578843a7" />
+
+<img width="1926" height="77" alt="image" src="https://github.com/user-attachments/assets/0785b9ec-9d32-4a81-a69a-669992fab286" />
+
+
 
 
 

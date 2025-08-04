@@ -1,11 +1,15 @@
 # Update record
 2025-08-04
 DRSAM3D结果更新
+
 实验结果曲线图
+
 <img width="351" height="175" alt="image" src="https://github.com/user-attachments/assets/b532dce9-702f-44b5-bddf-8f93578843a7" />
 各标签实验结果平均分数
+
 <img width="227" height="419" alt="image" src="https://github.com/user-attachments/assets/e0324532-dc35-4e89-985d-5d642a57de3e" />
 对比实验结果
+
 <img width="897" height="77" alt="image" src="https://github.com/user-attachments/assets/ea6afd37-8a7a-4c22-852b-681a61c4db54" />
 
 

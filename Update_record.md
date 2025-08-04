@@ -24,7 +24,7 @@ DRSAM3D结果更新
 |Class 18|	0.2759|	0.1607|
 |Class 19|	0.5495|	0.3788|
 |All|	0.61478|	0.481505|
-<img width="234" height="117" alt="image" src="https://github.com/user-attachments/assets/b532dce9-702f-44b5-bddf-8f93578843a7" />
+<img width="351" height="175" alt="image" src="https://github.com/user-attachments/assets/b532dce9-702f-44b5-bddf-8f93578843a7" />
 
 
 

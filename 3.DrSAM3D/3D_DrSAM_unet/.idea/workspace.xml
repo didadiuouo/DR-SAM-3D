@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="78aa3bed-0ba4-4ff4-aa99-7d00ff661315" name="Default Changelist" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ProjectId" id="30UQv2xWUYsaGEIEwMs4nRc9LeM" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="settings.editor.selected.configurable" value="configurable.group.project" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\Desktop\3D_segmentation\3D-DRSAM\2. SAM3d-consist\3D_DrSAM_unet" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\Desktop\3D_segmentation\3D-DRSAM\2. SAM3d-consist\3D_DrSAM_unet\utils" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Python.DrSAM_multiGPU">
+    <configuration name="3D-unet_test_curve" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="3D-unet" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/3D-unet_test_curve.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="3D-unet_test_multigpu" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="3D-unet" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/3D-unet_test_multigpu.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="3D-unet_test_multigpu2" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="3D-unet" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/3D-unet_test_multigpu2.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="DrSAM_multiGPU" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="3D-unet" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/DrSAM_multiGPU.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="click_method" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="3D-unet" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/utils" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/utils/click_method.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.DrSAM_multiGPU" />
+        <item itemvalue="Python.3D-unet_test_multigpu" />
+        <item itemvalue="Python.3D-unet_test_curve" />
+        <item itemvalue="Python.click_method" />
+        <item itemvalue="Python.3D-unet_test_multigpu2" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="78aa3bed-0ba4-4ff4-aa99-7d00ff661315" name="Default Changelist" comment="" />
+      <created>1753679898685</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1753679898685</updated>
+      <workItem from="1753679900343" duration="9731000" />
+      <workItem from="1753835909334" duration="69496000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state width="1616" height="466" key="DebuggerActiveHint" timestamp="1754026693129">
+      <screen x="0" y="0" width="1920" height="1032" />
+    </state>
+    <state width="1616" height="466" key="DebuggerActiveHint/1920.0.1920.1032/0.0.1920.1032@0.0.1920.1032" timestamp="1754026693129" />
+    <state width="1877" height="314" key="GridCell.Tab.0.bottom" timestamp="1754127654639">
+      <screen x="0" y="0" width="1920" height="1032" />
+    </state>
+    <state width="1877" height="314" key="GridCell.Tab.0.bottom/1920.0.1920.1032/0.0.1920.1032@0.0.1920.1032" timestamp="1754127654639" />
+    <state width="1877" height="314" key="GridCell.Tab.0.center" timestamp="1754127654639">
+      <screen x="0" y="0" width="1920" height="1032" />
+    </state>
+    <state width="1877" height="314" key="GridCell.Tab.0.center/1920.0.1920.1032/0.0.1920.1032@0.0.1920.1032" timestamp="1754127654639" />
+    <state width="1877" height="314" key="GridCell.Tab.0.left" timestamp="1754127654639">
+      <screen x="0" y="0" width="1920" height="1032" />
+    </state>
+    <state width="1877" height="314" key="GridCell.Tab.0.left/1920.0.1920.1032/0.0.1920.1032@0.0.1920.1032" timestamp="1754127654639" />
+    <state width="1877" height="314" key="GridCell.Tab.0.right" timestamp="1754127654639">
+      <screen x="0" y="0" width="1920" height="1032" />
+    </state>
+    <state width="1877" height="314" key="GridCell.Tab.0.right/1920.0.1920.1032/0.0.1920.1032@0.0.1920.1032" timestamp="1754127654639" />
+    <state width="1877" height="235" key="GridCell.Tab.1.bottom" timestamp="1754026901557">
+      <screen x="0" y="0" width="1920" height="1032" />
+    </state>
+    <state width="1877" height="235" key="GridCell.Tab.1.bottom/1920.0.1920.1032/0.0.1920.1032@0.0.1920.1032" timestamp="1754026901557" />
+    <state width="1877" height="235" key="GridCell.Tab.1.center" timestamp="1754026901557">
+      <screen x="0" y="0" width="1920" height="1032" />
+    </state>
+    <state width="1877" height="235" key="GridCell.Tab.1.center/1920.0.1920.1032/0.0.1920.1032@0.0.1920.1032" timestamp="1754026901557" />
+    <state width="1877" height="235" key="GridCell.Tab.1.left" timestamp="1754026901557">
+      <screen x="0" y="0" width="1920" height="1032" />
+    </state>
+    <state width="1877" height="235" key="GridCell.Tab.1.left/1920.0.1920.1032/0.0.1920.1032@0.0.1920.1032" timestamp="1754026901557" />
+    <state width="1877" height="235" key="GridCell.Tab.1.right" timestamp="1754026901557">
+      <screen x="0" y="0" width="1920" height="1032" />
+    </state>
+    <state width="1877" height="235" key="GridCell.Tab.1.right/1920.0.1920.1032/0.0.1920.1032@0.0.1920.1032" timestamp="1754026901557" />
+    <state x="500" y="260" key="SettingsEditor" timestamp="1754030567799">
+      <screen x="0" y="0" width="1920" height="1032" />
+    </state>
+    <state x="500" y="260" key="SettingsEditor/1920.0.1920.1032/0.0.1920.1032@0.0.1920.1032" timestamp="1754030567799" />
+    <state x="894" y="348" width="628" height="539" key="ftp.server.browser" timestamp="1753836069774">
+      <screen x="0" y="0" width="1920" height="1032" />
+    </state>
+    <state x="894" y="348" width="628" height="539" key="ftp.server.browser/1920.0.1920.1032/0.0.1920.1032@0.0.1920.1032" timestamp="1753836069774" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/3D-unet.py</url>
+          <line>226</line>
+          <option name="timeStamp" value="8" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/utils/click_method.py</url>
+          <line>216</line>
+          <option name="timeStamp" value="24" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/3D_DrSAM_unet$3D_unet_test_multigpu2.coverage" NAME="3D-unet_test_multigpu2 Coverage Results" MODIFIED="1754026495168" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/3D_unet$3D_unet.coverage" NAME="3D-unet Coverage Results" MODIFIED="1753691167819" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/3D_DrSAM_unet$prompt_encoder3D.coverage" NAME="prompt_encoder3D Coverage Results" MODIFIED="1753864452466" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/segment_anything_3d/modeling" />
+    <SUITE FILE_PATH="coverage/3D_DrSAM_unet$click_method.coverage" NAME="click_method Coverage Results" MODIFIED="1754027489917" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/utils" />
+    <SUITE FILE_PATH="coverage/3D_DrSAM_unet$3D_unet_test_curve.coverage" NAME="3D-unet_test_curve Coverage Results" MODIFIED="1754094075964" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/3D_DrSAM_unet$3D_unet_test_multigpu.coverage" NAME="3D-unet_test_multigpu Coverage Results" MODIFIED="1754094358062" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/3D_DrSAM_unet$DRSAM_filter.coverage" NAME="DRSAM_filter Coverage Results" MODIFIED="1754012561446" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/3D_DrSAM_unet$DrSAM_multiGPU.coverage" NAME="DrSAM_multiGPU Coverage Results" MODIFIED="1754127654634" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+  </component>
+</project>

@@ -1,4 +1,29 @@
 # Update record
+2025-07-01
+
+    最新结果更新
+![image](https://github.com/user-attachments/assets/ac498f4d-8a7f-46be-b440-509f2f1219e5)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 2025-6-20
 
     FastSAM3D 跑通，
@@ -20,6 +45,10 @@
     3D-unet探索分割多标签的方法，修改MedSAM3d，训练MedSAM3d
 ![image](https://github.com/user-attachments/assets/6e524e34-e759-4805-80f1-952bbe4753ec)
 
+2025-6-26
+
+    resize加onehot编码尝试，平均DICE达到0.69+
+![Dice](https://github.com/user-attachments/assets/7ad3fd48-b101-4802-ab29-0ee409b967f1)
 
 
 
